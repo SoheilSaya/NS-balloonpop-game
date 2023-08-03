@@ -15,22 +15,22 @@ import subprocess
 if __name__ == '__main__':
     flag=False
     def run_script():
+        subprocess.run(['python', 'toolbox.py'])
+    def reset_game():
+        global flag, speed, score, startTime, totalTime, timeRemain
         flag=True
         speed = 8
         score = 0
         startTime = time.time()
-        totalTime = 600
-        timeRemain=600
-        print('ruhnnnnnnnnnnnnnnnnnn')
-        subprocess.run(['python', 'toolbox.py'])
+        #totalTime = totalTime
 
     def show_window():
         root = tk.Tk()
-        root.title('Run Script')
-
+        root.title('Game control')
         run_button = tk.Button(root, text='New contestant', command=run_script)
         run_button.pack()
-
+        reset_button = tk.Button(root, text='Reset Game', command=reset_game)
+        reset_button.pack()
         root.mainloop()
 
     window_thread = threading.Thread(target=show_window)
@@ -128,18 +128,11 @@ if __name__ == '__main__':
         transformed_y /= transformed_w
 
         return int(transformed_x), int(transformed_y)
-
+    timeRemain=0
     # Main loop
     start = True
     while start:
-        if flag is True:
-            speed = 8
-            score = 0
-            startTime = time.time()
-            totalTime = 600
-            timeRemain=600
-            print('newwwwww')
-            flag=False
+
         if rectBalloon.y<(width/10*5):
             rectBomb.x=10000
             rectBomb.y=10000

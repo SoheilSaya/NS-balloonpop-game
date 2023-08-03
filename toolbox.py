@@ -10,10 +10,7 @@ def submit():
         f.write(f"Mother's Phone Number: {mothers_phone_entry.get()}\n")
         f.write(f'Age: {age_entry.get()}\n')
         f.write(f'Major: {major_entry.get()}\n\n')
-    BalloonPop.speed = 8
-    BalloonPop.score = 0
-    BalloonPop.startTime = time.time()
-    BalloonPop.totalTime = 600
+
 
 root = tk.Tk()
 root.title('Personal Information Form')
