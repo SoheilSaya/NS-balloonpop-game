@@ -68,6 +68,38 @@ if __name__ == '__main__':
     rectBomb = imgBomb.get_rect()
     rectBalloon.x, rectBalloon.y = 500, 100
     #rectBomb.x, rectBomb.y = 500, 100
+    script_directory = os.path.dirname(os.path.abspath(__file__))
+    logo_path = os.path.join(script_directory, "Resources", "logo.png")
+
+    # Load the logo image (with error handling)
+    try:
+        logo_img = pygame.image.load(logo_path).convert_alpha()
+        logo_img = pygame.transform.scale(logo_img, (300, 300))  # Adjust the logo size if needed
+    except pygame.error as e:
+        print("Error loading the logo image:", e)
+        logo_img = None  # Set to None if loading fails
+    
+    # Define the font size for the website address
+    font_size = 40
+
+    # Define the path to the font file (replace 'YourFont.ttf' with the actual font file name)
+    font_file_path = os.path.join(script_directory, "Resources", "The Heart Maze Demo.ttf")
+
+    # Load the font and set it to bold
+    font_website = pygame.font.Font(font_file_path, font_size)
+    font_website.set_bold(True)
+
+
+    # Define the colors for the website address
+    website_color_yellow = (255, 255, 0)    # Yellow color
+    website_color_light_blue = (173, 216, 230)  # Light blue color
+
+    # Replace 'www.example.com' with your actual website address
+    website_address = "www.Nokhbehsho.com"
+
+    # Split the website address into two parts: "www." and the rest of the address
+    website_www = "www."
+    website_address_rest = website_address[4:]  # Skip the first four characters ("www.")
 
     # Variables
     speed = 8
@@ -214,6 +246,24 @@ if __name__ == '__main__':
                 textTime = font.render(algorithm.get_display(persian_reshaper.reshape(f'زمان: {timeRemain}')), True, (50, 50, 255))
                 window.blit(textScore, (35, 35))
                 window.blit(textTime, (800, 35))
+
+                if logo_img:
+        
+                    window.blit(logo_img, (700, 520))  # Adjust the position of the logo on the screen
+
+                # Display the "www." part in yellow
+                text_website_www = font_website.render(website_www, True, website_color_yellow)
+
+                # Display the rest of the website address in light blue
+                text_website_rest = font_website.render(website_address_rest, True, website_color_light_blue)
+
+                # Calculate the position to center the website addresses at the bottom of the screen
+                website_x_www = (width - text_website_www.get_width() - text_website_rest.get_width()) // 2
+                website_y = height - 50
+
+                # Blit the website addresses on the screen
+                window.blit(text_website_www, (website_x_www, website_y))
+                window.blit(text_website_rest, (website_x_www + text_website_www.get_width(), website_y))
 
             pygame.display.update()
             clock.tick(fps)
