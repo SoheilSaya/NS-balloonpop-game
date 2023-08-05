@@ -15,7 +15,14 @@ import subprocess
 if __name__ == '__main__':
     flag=False
     def run_script():
+        global goflag,flag, speed, score, startTime, totalTime, timeRemain
+        goflag=False
         subprocess.run(['python', 'toolbox.py'])
+        goflag=True
+        flag=True
+        speed = 8
+        score = 0
+        startTime = time.time()
     def reset_game():
         global flag, speed, score, startTime, totalTime, timeRemain
         flag=True
@@ -35,6 +42,7 @@ if __name__ == '__main__':
 
     window_thread = threading.Thread(target=show_window)
     window_thread.start()
+    
     pygame.init()
 
     # Create Window/Display
@@ -131,83 +139,84 @@ if __name__ == '__main__':
     timeRemain=0
     # Main loop
     start = True
+    goflag=False
     while start:
+        if goflag:
+            if rectBalloon.y<(width/10*5):
+                rectBomb.x=10000
+                rectBomb.y=10000
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    start = False
+                    pygame.quit()
 
-        if rectBalloon.y<(width/10*5):
-            rectBomb.x=10000
-            rectBomb.y=10000
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                start = False
-                pygame.quit()
+            timeRemain = int(totalTime - (time.time() - startTime))
+            if timeRemain < 0:
+                # Game Over
+                window.fill((255, 255, 255))
+                font = pygame.font.Font(None, 50)
+                textScore = font.render(f"Your Score: {score}", True, (50, 50, 255))
+                textTime = font.render(f"Time UP", True, (50, 50, 255))
+                window.blit(textScore, (450, 350))
+                window.blit(textTime, (530, 275))
 
-        timeRemain = int(totalTime - (time.time() - startTime))
-        if timeRemain < 0:
-            # Game Over
-            window.fill((255, 255, 255))
-            font = pygame.font.Font(None, 50)
-            textScore = font.render(f"Your Score: {score}", True, (50, 50, 255))
-            textTime = font.render(f"Time UP", True, (50, 50, 255))
-            window.blit(textScore, (450, 350))
-            window.blit(textTime, (530, 275))
+            else:
+                success, img = cap.read()
 
-        else:
-            success, img = cap.read()
+                hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+                lower_yellow = np.array([20, 100, 100])
+                upper_yellow = np.array([40, 255, 255])
+                mask = cv2.inRange(hsv, lower_yellow, upper_yellow)
+                contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
-            hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
-            lower_yellow = np.array([20, 100, 100])
-            upper_yellow = np.array([40, 255, 255])
-            mask = cv2.inRange(hsv, lower_yellow, upper_yellow)
-            contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+                if len(contours) > 0:
+                    max_contour = max(contours, key=cv2.contourArea)
+                    (x, y), radius = cv2.minEnclosingCircle(max_contour)
+                    x, y, radius = int(x), int(y), int(radius)
 
-            if len(contours) > 0:
-                max_contour = max(contours, key=cv2.contourArea)
-                (x, y), radius = cv2.minEnclosingCircle(max_contour)
-                x, y, radius = int(x), int(y), int(radius)
+                    if radius > 5:
+                        cv2.circle(img, (x, y), radius, (0, 255, 255), 2)
 
-                if radius > 5:
-                    cv2.circle(img, (x, y), radius, (0, 255, 255), 2)
+                        # Apply the calibration transformation to the yellow ball coordinates
+                        x_transformed, y_transformed = transformCoordinates(x, y)
 
-                    # Apply the calibration transformation to the yellow ball coordinates
-                    x_transformed, y_transformed = transformCoordinates(x, y)
+                        # Check if the transformed yellow ball collides with the balloon
+                        if yellowBallCollidesBalloon(x_transformed, y_transformed, radius, rectBalloon):
+                            
+                            rectBomb.x=rectBalloon.x
+                            rectBomb.y=rectBalloon.y
+                            #time.sleep(0.5)
+                            sound_file_path = './Resources/eyval.mp3'
+                            play_sound_threaded(sound_file_path)
+                            balloonBurst()
 
-                    # Check if the transformed yellow ball collides with the balloon
-                    if yellowBallCollidesBalloon(x_transformed, y_transformed, radius, rectBalloon):
-                        
-                        rectBomb.x=rectBalloon.x
-                        rectBomb.y=rectBalloon.y
-                        #time.sleep(0.5)
-                        sound_file_path = './Resources/eyval.mp3'
-                        play_sound_threaded(sound_file_path)
-                        balloonBurst()
+                            
+                            score += 10
+                            speed += 0.3
+                            
 
-                        
-                        score += 10
-                        speed += 0.3
-                        
+                rectBalloon.y -= speed
+                if rectBalloon.y < -rectBalloon.height:  # Check if the balloon is completely off the screen
+                    resetBalloon()
+                    speed += 0.3
 
-            rectBalloon.y -= speed
-            if rectBalloon.y < -rectBalloon.height:  # Check if the balloon is completely off the screen
-                resetBalloon()
-                speed += 0.3
+                imgRGB = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+                calibrated_frame = cv2.warpPerspective(imgRGB, M, (width, height))
+                calibrated_frame = cv2.rotate(calibrated_frame, cv2.ROTATE_90_COUNTERCLOCKWISE)
 
-            imgRGB = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-            calibrated_frame = cv2.warpPerspective(imgRGB, M, (width, height))
-            calibrated_frame = cv2.rotate(calibrated_frame, cv2.ROTATE_90_COUNTERCLOCKWISE)
+                frame = pygame.surfarray.make_surface(calibrated_frame).convert()
+                frame = pygame.transform.flip(frame, True, False)
+                window.blit(frame, (0, 0))
+                window.blit(imgBalloon, rectBalloon)
+                window.blit(imgBomb, rectBomb)
+                font = pygame.font.Font('./Resources/IRAN Sans Bold.ttf', 50)
+                textScore = font.render(algorithm.get_display(persian_reshaper.reshape(f'امتیاز: {score}')), True, (50, 50, 255))
+                textTime = font.render(algorithm.get_display(persian_reshaper.reshape(f'زمان: {timeRemain}')), True, (50, 50, 255))
+                window.blit(textScore, (35, 35))
+                window.blit(textTime, (800, 35))
 
-            frame = pygame.surfarray.make_surface(calibrated_frame).convert()
-            frame = pygame.transform.flip(frame, True, False)
-            window.blit(frame, (0, 0))
-            window.blit(imgBalloon, rectBalloon)
-            window.blit(imgBomb, rectBomb)
-            font = pygame.font.Font('./Resources/IRAN Sans Bold.ttf', 50)
-            textScore = font.render(algorithm.get_display(persian_reshaper.reshape(f'امتیاز: {score}')), True, (50, 50, 255))
-            textTime = font.render(algorithm.get_display(persian_reshaper.reshape(f'زمان: {timeRemain}')), True, (50, 50, 255))
-            window.blit(textScore, (35, 35))
-            window.blit(textTime, (800, 35))
-
-        pygame.display.update()
-        clock.tick(fps)
+            pygame.display.update()
+            clock.tick(fps)
 
     cap.release()
     cv2.destroyAllWindows()

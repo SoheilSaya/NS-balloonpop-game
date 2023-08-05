@@ -2,14 +2,63 @@ import tkinter as tk
 from tkinter import ttk
 import time
 import BalloonPop
+from tkinter import messagebox
+numbers=[0,1,2,3,4,5,6,7,8,9]
+def has_numbers(inputString):
+    return any(char.isdigit() for char in inputString)
+def controlname(name,reference):
+    if not name:
+        messagebox.showerror('Error', f'{reference} empty')
+        return False
+    elif len(name)<3:
+        messagebox.showerror('Error', f'{reference} is too short')
+        return False
+    elif has_numbers(name):
+        messagebox.showerror('Error', f'{reference} has numbres')
+        return False
+    
+    return True
+def controlnum(phonenumber,reference):
+    if not phonenumber:
+        messagebox.showerror('Error', f'{reference} empty')
+        return False
+    elif phonenumber.isnumeric() ==False:
+        messagebox.showerror('Error', f'Wrong {reference} (wrong input)')
+        return False
+    elif len(phonenumber)!=11:
+        messagebox.showerror('Error', f'Wrong {reference} length (start with 0)')
+        return False
+
+
+    return True
+def controlage(age):
+    if not age:
+        messagebox.showerror('Error', f'age empty (3-99)')
+        return False
+    elif age.isnumeric()==False:
+        messagebox.showerror('Error', f'Wrong age (3-99)')
+        return False
+    elif len(age)>2:
+        messagebox.showerror('Error', f'Wrong age (3-99)')
+        return False
+
+    return True
+        
 def submit():
+                
     with open('personal_info.txt', 'a') as f:
-        f.write(f'First Name: {name_entry.get()}\n')
-        f.write(f'Last Name: {last_name_entry.get()}\n')
-        f.write(f"Father's Phone Number: {fathers_phone_entry.get()}\n")
-        f.write(f"Mother's Phone Number: {mothers_phone_entry.get()}\n")
-        f.write(f'Age: {age_entry.get()}\n')
-        f.write(f'Major: {major_entry.get()}\n\n')
+        if controlname(name_entry.get(),'First name') and controlname(last_name_entry.get(),'Last name') and controlnum(fathers_phone_entry.get(),"Father's Phone Number") and controlnum(mothers_phone_entry.get(),"Mother's Phone Number") and controlage(age_entry.get()) and controlname(major_entry.get(),'Major') :
+        
+            
+            
+            f.write(f'First Name: {name_entry.get()}\n')
+            f.write(f'Last Name: {last_name_entry.get()}\n')
+            f.write(f"Father's Phone Number: {fathers_phone_entry.get()}\n")
+            f.write(f"Mother's Phone Number: {mothers_phone_entry.get()}\n")
+            f.write(f'Age: {age_entry.get()}\n')
+            f.write(f'Major: {major_entry.get()}\n\n')
+            root.destroy()
+        #BalloonPop.goflag=True
 
 
 root = tk.Tk()

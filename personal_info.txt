@@ -1,0 +1,70 @@
+First Name: 
+Last Name: 
+Father's Phone Number: 
+Mother's Phone Number: 
+Age: 
+Major: 
+
+First Name: 
+Last Name: 
+Father's Phone Number: 
+Mother's Phone Number: 
+Age: 
+Major: 
+
+First Name: 
+Last Name: 
+Father's Phone Number: 
+Mother's Phone Number: 
+Age: 
+Major: 
+
+First Name: 
+Last Name: 
+Father's Phone Number: 
+Mother's Phone Number: 
+Age: 
+Major: 
+
+First Name: 
+Last Name: 
+Father's Phone Number: 
+Mother's Phone Number: 
+Age: 
+Major: 
+
+First Name: 
+Last Name: 
+Father's Phone Number: 
+Mother's Phone Number: 
+Age: 
+Major: 
+
+First Name: 
+Last Name: 
+Father's Phone Number: 
+Mother's Phone Number: 
+Age: 
+Major: 
+
+First Name: 
+Last Name: 
+Father's Phone Number: 
+Mother's Phone Number: 
+Age: 
+Major: 
+
+First Name: sdfsdf
+Last Name: sdvsdv
+Father's Phone Number: 09467387465
+Mother's Phone Number: 09467387465
+Age: 34
+Major: weew
+
+First Name: erg
+Last Name: erge
+Father's Phone Number: 33333333333
+Mother's Phone Number: 33333333333
+Age: 32
+Major: efwe
+
