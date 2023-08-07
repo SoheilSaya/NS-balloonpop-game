@@ -24,8 +24,7 @@ pip install tk<br />
 pip install Tkinter<br />
 pip install python-bidi<br />
 
-Last but not least, download this file (orange button): https://bayanbox.ir/info/1969843498968577765/persian-reshaper<br />
-copy persian_reshaper.py to python/lib<br />
+Last but not least, copy persian_reshaper.py to python/lib folder. this file is needed to show Persian fonts properly.<br />
 Mentioned directory can often be found at C:\Program Files\Python311\Lib, or C:\Python\Lib, if not, search "python.exe" and you may find it with ease.<br />
 
 Youre almost set, just make sure you have a working webcam and a yellow object at your disposal.<br />
