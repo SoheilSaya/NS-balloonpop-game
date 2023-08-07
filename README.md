@@ -26,8 +26,9 @@ pip install threading
 ```
 pip install thread
 ```
+#this specific version since default version has incompatibilities with python 3, causing errors:
 ```
-pip install playsound==1.2.2   #this specific version since default version has incompatibilities with python 3, causing errors.
+pip install playsound==1.2.2
 ```
 ```
 pip install tk
