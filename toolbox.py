@@ -1,9 +1,30 @@
 import tkinter as tk
 from tkinter import ttk
 import time
-import BalloonPop
+import requests
 from tkinter import messagebox
+from playsound import playsound
+
 numbers=[0,1,2,3,4,5,6,7,8,9]
+def download_mp3(url, save_path):
+    try:
+        response = requests.get(url)
+        if response.status_code == 200:
+            with open(save_path, 'wb') as file:
+                file.write(response.content)
+            print("MP3 file downloaded successfully.")
+        else:
+            print("Failed to download MP3 file. Status code:", response.status_code)
+    except requests.exceptions.RequestException as e:
+        print("An error occurred:", e)
+
+def play_sound(file_path):
+    try:
+        playsound(file_path)
+    except Exception as e:
+        print("An error occurred:", e)
+
+
 def has_numbers(inputString):
     return any(char.isdigit() for char in inputString)
 def controlname(name,reference):
@@ -44,21 +65,29 @@ def controlage(age):
 
     return True
         
-def submit():
-                
+
+        #BalloonPop.goflag=True
+namee='test'
+def submit():       
     with open('personal_info.txt', 'a') as f:
-        if controlname(name_entry.get(),'First name') and controlname(last_name_entry.get(),'Last name') and controlnum(fathers_phone_entry.get(),"Father's Phone Number") and controlnum(mothers_phone_entry.get(),"Mother's Phone Number") and controlage(age_entry.get()) and controlname(major_entry.get(),'Major') :
-        
-            
-            
+        #if controlname(name_entry.get(),'First name') and controlname(last_name_entry.get(),'Last name') and controlnum(fathers_phone_entry.get(),"Father's Phone Number") and controlnum(mothers_phone_entry.get(),"Mother's Phone Number") and controlage(age_entry.get()) and controlname(major_entry.get(),'Major') :
             f.write(f'First Name: {name_entry.get()}\n')
             f.write(f'Last Name: {last_name_entry.get()}\n')
             f.write(f"Father's Phone Number: {fathers_phone_entry.get()}\n")
             f.write(f"Mother's Phone Number: {mothers_phone_entry.get()}\n")
             f.write(f'Age: {age_entry.get()}\n')
             f.write(f'Major: {major_entry.get()}\n\n')
+            global namee
+            namee=name_entry.get()
             root.destroy()
-        #BalloonPop.goflag=True
+
+            
+    return namee
+
+def on_submit():
+    global result_variable
+    result_variable = submit()
+    #return result_variable
 
 
 root = tk.Tk()
@@ -99,10 +128,11 @@ major_label.grid(column=1,row=6 ,sticky=tk.W)
 major_entry = ttk.Entry(mainframe)
 major_entry.grid(column=2,row=6 ,sticky=(tk.W, tk.E))
 
-submit_button = ttk.Button(mainframe,text='Submit',command=submit)
+submit_button = ttk.Button(mainframe, text='Submit', command=on_submit)
 submit_button.grid(column=2,row=7)
 
 for child in mainframe.winfo_children(): 
     child.grid_configure(padx=5,pady=5)
 
 root.mainloop()
+print(namee)

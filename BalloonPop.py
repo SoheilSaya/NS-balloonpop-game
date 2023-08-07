@@ -4,6 +4,7 @@ import cv2
 import numpy as np
 import time
 import threading
+import requests
 from playsound import playsound
 from pygame.locals import *
 from bidi import algorithm
@@ -12,7 +13,11 @@ import persian_reshaper
 # Initialize
 import tkinter as tk
 import subprocess
+from toolbox import namee, download_mp3, play_sound
+print (namee)
 if __name__ == '__main__':
+    print (namee)
+    print (namee)
     flag=False
     def run_script():
         global goflag,flag, speed, score, startTime, totalTime, timeRemain
@@ -105,7 +110,7 @@ if __name__ == '__main__':
     speed = 8
     score = 0
     startTime = time.time()
-    totalTime = 600
+    totalTime = 9
 
     # Detector
     points = []
@@ -174,6 +179,14 @@ if __name__ == '__main__':
     goflag=False
     while start:
         if goflag:
+            name=namee
+            print(namee)
+            print(name)
+            greeting_str=f'یک دو سه، شروع کن {name}'
+            greeting_url = f"https://api.farsireader.com/ArianaCloudService/ReadTextGET?APIKey=4JN129JCAF20A6S&Text={greeting_str}&Speaker=Male1&Format=mp3"
+            greeting_path = "greeting.mp3"
+            download_mp3(greeting_url, greeting_path)
+            play_sound(greeting_path)
             if rectBalloon.y<(width/10*5):
                 rectBomb.x=10000
                 rectBomb.y=10000
@@ -191,6 +204,14 @@ if __name__ == '__main__':
                 textTime = font.render(f"Time UP", True, (50, 50, 255))
                 window.blit(textScore, (450, 350))
                 window.blit(textTime, (530, 275))
+
+                endgame_str=f'وقتت تموم شد {name}, امتیازت شد {score}'
+                endgame_url = f"https://api.farsireader.com/ArianaCloudService/ReadTextGET?APIKey=4JN129JCAF20A6S&Text={endgame_str}&Speaker=Male1&Format=mp3"
+                endgame_path = "endgame.mp3"
+                download_mp3(endgame_url, endgame_path)
+                play_sound(endgame_path)
+
+
 
             else:
                 success, img = cap.read()
