@@ -6,24 +6,6 @@ from tkinter import messagebox
 from playsound import playsound
 
 numbers=[0,1,2,3,4,5,6,7,8,9]
-def download_mp3(url, save_path):
-    try:
-        response = requests.get(url)
-        if response.status_code == 200:
-            with open(save_path, 'wb') as file:
-                file.write(response.content)
-            print("MP3 file downloaded successfully.")
-        else:
-            print("Failed to download MP3 file. Status code:", response.status_code)
-    except requests.exceptions.RequestException as e:
-        print("An error occurred:", e)
-
-def play_sound(file_path):
-    try:
-        playsound(file_path)
-    except Exception as e:
-        print("An error occurred:", e)
-
 
 def has_numbers(inputString):
     return any(char.isdigit() for char in inputString)
@@ -67,7 +49,7 @@ def controlage(age):
         
 
         #BalloonPop.goflag=True
-namee='test'
+
 def submit():       
     with open('personal_info.txt', 'a') as f:
         #if controlname(name_entry.get(),'First name') and controlname(last_name_entry.get(),'Last name') and controlnum(fathers_phone_entry.get(),"Father's Phone Number") and controlnum(mothers_phone_entry.get(),"Mother's Phone Number") and controlage(age_entry.get()) and controlname(major_entry.get(),'Major') :

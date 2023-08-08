@@ -1,28 +1,32 @@
-import tkinter as tk
-from tkinter import ttk
+import pygame
+import requests
+from io import BytesIO
+name='ارسلان'
+greeting_str=f'یک دو سه، شروع کن {name}'
+greeting_url = f"https://api.farsireader.com/ArianaCloudService/ReadTextGET?APIKey=4JN129JCAF20A6S&Text={greeting_str}&Speaker=Male1&Format=mp3"
+# Initialize Pygame
+pygame.init()
 
-def submit():
-    result = "Your submission was successful!"
-    return result
+# URL of the MP3 file
+mp3_url = "greeting_url"
 
-def on_submit():
-    global result_variable
-    result_variable = submit()
+# Fetch the MP3 data from the URL
+response = requests.get(f"https://api.farsireader.com/ArianaCloudService/ReadTextGET?APIKey=4JN129JCAF20A6S&Text={greeting_str}&Speaker=Male1&Format=mp3")
+mp3_data = BytesIO(response.content)
 
-root = tk.Tk()
-root.title("Submit and Fetch Example")
+# Initialize Pygame mixer
+pygame.mixer.init()
 
-mainframe = ttk.Frame(root, padding="20")
-mainframe.grid(column=0, row=0, sticky=(tk.W, tk.E, tk.N, tk.S))
+# Load the MP3 data
+pygame.mixer.music.load(mp3_data)
 
-submit_button = ttk.Button(mainframe, text='Submit', command=on_submit)
-submit_button.grid(column=1, row=2, sticky=tk.W)
+# Play the MP3
+pygame.mixer.music.play()
 
-result_variable = tk.StringVar()
-result_label = ttk.Label(mainframe, textvariable=result_variable)
-result_label.grid(column=1, row=3, columnspan=2)
+# Wait for the music to finish playing
+while pygame.mixer.music.get_busy():
+    pygame.time.Clock().tick(10)
 
-root.mainloop()
-
-# After the mainloop has finished, you can print the result_variable value
-print(result_variable.get())
+# Clean up
+pygame.mixer.quit()
+pygame.quit()
