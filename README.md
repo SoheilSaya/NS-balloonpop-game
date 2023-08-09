@@ -44,3 +44,8 @@ Mentioned directory can often be found at C:\Program Files\Python311\Lib, or C:\
 
 Youre almost set, just make sure you have a working webcam and a yellow object at your disposal.<br />
 Beware that precision and accuracy of this code is determined by your hardware and your webcam resolution.<br />
+Also keep this in mind: In webcam calibration; sequence of the clicks matters. They should be in this order:<br />
+1.top left<br />
+2.top right<br />
+3.bottom right<br />
+4.bottom left
